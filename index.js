@@ -10,9 +10,7 @@ let tickets = [];
     * Create 12 calls to the function addTicket(status, openDate, priority, title, author, category, assignee), 
     * which creates a support ticket in an IT helpdesk for a retail store. Pick random, nearby dates. status can be either "New", 
     * "In Progress", or "Closed". priority can be either "Low", "Medium", or "High". The assignee should be one person.
-*/
 
-/*
 addTicket("Closed", "2024-02-22", "High", "Network connectivity problem", "Alex Johnson", "Networking", "Charlie Brown")
 addTicket("New", "2024-02-18", "Low", "Printer not working", "John Doe", "Hardware", "Alice Smith")
 addTicket("In Progress", "2024-02-20", "Medium", "Software installation issue", "Jane Doe", "Software", "Bob Johnson")
@@ -26,8 +24,6 @@ addTicket("New", "2024-03-21", "Medium", "Software crash", "Paul Anderson", "Sof
 addTicket("In Progress", "2024-03-26", "Low", "Printer paper jam", "Rachel Baker", "Hardware", "Samuel Adams")
 addTicket("Closed", "2024-04-01", "High", "Data backup failure", "Tina Campbell", "Backup", "Victor White")
 */
-
-let names = ['walmart']
 
 app.use(express.static('public'));
 
@@ -49,5 +45,15 @@ app.get('/ticket/:ticketId', (req, res) => {
 app.post('/newTicket', (req, res) => {
     let data = req.body;
     
+});
+
+var options = [
+    "Walmart",
+    "Kroger",
+    "Meijer"
+];
+
+app.get('/getnames', (req, res) => {
+    res.send(options);
 });
 
