@@ -1,29 +1,58 @@
 const express = require("express");
+const Pool = require("pg").Pool;
+
 const app = express();
 
+const pool = new Pool({
+    user: 'postgres',
+    host: 'localhost',
+    database: 'postgres',
+    password: 'admin',
+    port: 5432
+});
+
+function initDB()
+{
+    /*
+    const sql = `
+    CREATE TABLE IF NOT EXISTS tickets (
+        id SERIAL,
+        status VARCHAR(16),
+        openDate DATE,
+        priority VARCHAR(8),
+        title TEXT,
+        author INTEGER REFERENCES users,
+        category VARCHAR(32),
+        assignee INTEGER REFERENCES users,
+        description TEXT,
+        image TEXT
+    )`;
+    */
+
+    const sql = `
+    CREATE TABLE IF NOT EXISTS tickets (
+        id SERIAL,
+        status TEXT,
+        openDate TEXT,
+        priority TEXT,
+        title TEXT,
+        author TEXT,
+        category TEXT,
+        assignee TEXT,
+        description TEXT,
+        image TEXT
+    )`;
+
+    pool.query(sql, (err, result) => {
+        if (err) throw err;
+        else
+        {
+            console.log("'tickets' table created.");
+        }
+    });
+}
+
 let tickets = [];
-
-/* 
-    * Below calls to addTicket() were generated using ChatGPT 3.5.
-    *
-    * Prompt:
-    * Create 12 calls to the function addTicket(status, openDate, priority, title, author, category, assignee), 
-    * which creates a support ticket in an IT helpdesk for a retail store. Pick random, nearby dates. status can be either "New", 
-    * "In Progress", or "Closed". priority can be either "Low", "Medium", or "High". The assignee should be one person.
-
-addTicket("Closed", "2024-02-22", "High", "Network connectivity problem", "Alex Johnson", "Networking", "Charlie Brown")
-addTicket("New", "2024-02-18", "Low", "Printer not working", "John Doe", "Hardware", "Alice Smith")
-addTicket("In Progress", "2024-02-20", "Medium", "Software installation issue", "Jane Doe", "Software", "Bob Johnson")
-addTicket("New", "2024-02-25", "Medium", "Email configuration problem", "Eva White", "Email", "David Green")
-addTicket("In Progress", "2024-02-28", "Low", "Security software update required", "Frank Black", "Security", "Grace Davis")
-addTicket("Closed", "2024-03-03", "High", "POS system error", "Henry Gray", "Point of Sale", "Isabel Martinez")
-addTicket("In Progress", "2024-03-12", "Medium", "Account access issue", "Liam Brown", "Accounts", "Mary Robinson")
-addTicket("New", "2024-03-08", "Low", "Monitor flickering", "Jack Wilson", "Hardware", "Kelly Thompson")
-addTicket("Closed", "2024-03-16", "High", "Server outage", "Nina Taylor", "Infrastructure", "Oliver Miller")
-addTicket("New", "2024-03-21", "Medium", "Software crash", "Paul Anderson", "Software", "Quinn Turner")
-addTicket("In Progress", "2024-03-26", "Low", "Printer paper jam", "Rachel Baker", "Hardware", "Samuel Adams")
-addTicket("Closed", "2024-04-01", "High", "Data backup failure", "Tina Campbell", "Backup", "Victor White")
-*/
 
 app.use(express.static('public'));
 
@@ -31,6 +60,7 @@ app.use(express.urlencoded({extended: true}));
 
 app.listen(3000, () => {
     console.log("Listening on port 3000");
+    initDB();
 });
 
 app.get('/allTickets', (req, res) => {
@@ -44,7 +74,14 @@ app.get('/ticket/:ticketId', (req, res) => {
 
 app.post('/newTicket', (req, res) => {
     let data = req.body;
-    
+
+    const query = `INSERT INTO tickets (status, openDate, priority, title, author, category, assignee, description, image) VALUES ('${data.status}', '${data.openDate}', '${data.priority}', '${data.title}', '${data.author}', '${data.category}', '${data.assignee}', '${data.description}', '${data.image}')`;
+
+    pool.query(query, (err, result) => {
+        if (err) throw err;
+
+        //console.log(result.rows);
+    });
 });
 
 var options = [
