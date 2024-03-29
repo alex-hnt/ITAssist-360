@@ -1,0 +1,48 @@
+table a {
+  color: inherit;  
+  text-decoration: none; /* no underline */
+}
+
+#detailsModal p {
+    margin-bottom: 0; 
+}
+
+.modal-body h6 {
+    font-weight: bold;
+}
+
+.sort-active {
+    text-decoration: underline !important;
+}
+
+.status-green {
+    color: lightgreen;
+}
+
+.status-red {
+    color: red;
+}
+
+.status-yellow {
+    color: yellow;
+}
+
+.status-div {
+    font-size: 20px;
+}
+
+.ticket-closed {
+    text-decoration: line-through;
+}
+
+.ticket-green {
+    color: lightgreen !important;
+}
+
+.ticket-yellow {
+    color: yellow !important;
+}
+
+.ticket-red {
+    color: red !important;
+}
