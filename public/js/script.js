@@ -36,7 +36,7 @@ $(function() {
                     <tr class="${ticketClass}">
                     <td class="field-id">${ticket.id}</td>
                     <td class="field-status">${ticket.status}</td>
-                    <td class="field-date">${ticket.openDate}</td>
+                    <td class="field-date">${ticket.opendate}</td>
                     <td class="field-priority ${priorityClass}">${ticket.priority}</td>
                     <td class="field-title">${ticket.title}</td>
                     <td class="field-author">${ticket.author}</td>

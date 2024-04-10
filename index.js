@@ -7,27 +7,12 @@ const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'postgres',
-    password: 'admin',
+    password: '5432',
     port: 5432
 });
 
 function initDB()
 {
-    /*
-    const sql = `
-    CREATE TABLE IF NOT EXISTS tickets (
-        id SERIAL,
-        status VARCHAR(16),
-        openDate DATE,
-        priority VARCHAR(8),
-        title TEXT,
-        author INTEGER REFERENCES users,
-        category VARCHAR(32),
-        assignee INTEGER REFERENCES users,
-        description TEXT,
-        image TEXT
-    )`;
-    */
 
     const sql = `
     CREATE TABLE IF NOT EXISTS tickets (
@@ -64,13 +49,26 @@ app.listen(3000, () => {
 });
 
 app.get('/allTickets', (req, res) => {
-    res.send(tickets);
+    const sql = "SELECT * From Tickets";
+
+    pool.query(sql, (error, results) => {
+        if (error) throw error
+        res.status(200).json (results.rows)
+    })
 });
 
 app.get('/ticket/:ticketId', (req, res) => {
-    let ticket = tickets.find(ticket => ticket.id === parseInt(req.params.ticketId));
-    res.send(ticket);
+    const query = 'SELECT * FROM tickets WHERE ID = $1'; 
+    const ticketId = parseInt(req.params.ticketId);
+    const values = [ticketId];
+
+    pool.query(query, values, (error, results) => { 
+        if (error) throw error
+        
+        res.status(200).json(results.rows); 
+    });
 });
+
 
 app.post('/newTicket', (req, res) => {
     let data = req.body;
