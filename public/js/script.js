@@ -163,14 +163,15 @@ $(function() {
         });
     });
 
-    // Whenever a ticketModal is shown, use data from ticket to fill information
+    // Whenever a ticketModal is shown, use information from table and the database to fill information
     $("#ticketModal").on("shown.bs.modal", function (event) { 
         const button = event.relatedTarget;
         const curr = $(button).closest("tr"); //current ticket (row)
 
         let ticketId = curr.find(".field-id").text();
 
-        $.get(`ticket/${ticketId}`, (ticket) => {
+        $.get(`ticket/${ticketId}`, (tickets) => {
+            const ticket = tickets[0];
             $(".modal-title").text(curr.find(".field-title").text());
             $("#modalDate").text(curr.find(".field-date").text());
             $("#modalAuthor").text(curr.find(".field-author").text());
@@ -182,7 +183,8 @@ $(function() {
             $("#modalPicture").attr("src", ticket.image);
         });
     }); 
-    
+
+
     $("#showClosed").on("click", function() {
         $(".ticket-closed").each(function(index, obj) {
             if ($("#showClosed").is(":checked")) {
@@ -198,19 +200,37 @@ $(function() {
 
         let data = {
             status: "New",
-            openDate: "2024-02-21",
+            openDate: new Date().toLocaleDateString(),
             priority: $("#inputPriority").val(),
             title: $("#inputTitle").val(),
-            author: "Admin",
             category: $("#inputCategory").val(),
-            assignee: "test user",
+            assignee: $("#inputAssignee").val(),
             description: $("#inputDescription").val(),
             image: $("#inputPicture").val()
         }
 
-        $.post("newTicket", data);
+        if (!data.priority) {
+            alert("Form not valid! You must select a priority.");
+            return;
+        }
+        else if (!data.category) {
+            alert("Form not valid! You must select a category.");
+            return;
+        }
+        else {
+            $.post("newTicket", data);
+            alert("Ticket submitted!");
+            $("#createTicketModal").modal("hide");
+            location.reload();
+        }
 
-        populateTable();
+    });
+
+    // populates "assigned to" dropdown with all user names
+    $.get('allUsers', (users) => {
+        for (const user of users) {
+            $("#inputAssignee").append($("<option />").val(user.id).text(user.name));
+        }
     });
 
     populateTable();

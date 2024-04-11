@@ -25,6 +25,7 @@
             </div>
         </ul>
 
+        <h3 id="siteLabel">hereiam</h3>
         <div class="container d-flex mt-2">
             <div class="mt-auto">
                 <button class="btn btn-outline-light" type="button" data-bs-toggle="modal" data-bs-target="#createTicketModal">+ New Ticket</button>
@@ -118,7 +119,7 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="inputTitle" class="form-label">Title</label>
-                            <input autocomplete="off" type="text" class="form-control" id="inputTitle" placeholder="">
+                            <input autocomplete="off" type="text" class="form-control" id="inputTitle" placeholder="" required>
                         </div>
                         <div class="mb-3">
                             <label for="inputDescription" class="form-label">Description</label>
@@ -130,8 +131,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="inputPriority" class="form-label">Priority</label>
-                            <select autocomplete="off" class="form-select" id="inputPriority">
-                                <option selected>Select Priority</option>
+                            <select autocomplete="off" class="form-select" id="inputPriority" required>
+                                <option value="" selected>Select Priority</option>
                                 <option value="Low">Low</option>
                                 <option value="Medium">Medium</option>
                                 <option value="High">High</option>
@@ -139,8 +140,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="inputCategory" class="form-label">Category</label>
-                            <select autocomplete="off" class="form-select" id="inputCategory">
-                                <option selected>Select Category</option>
+                            <select autocomplete="off" class="form-select" id="inputCategory" required>
+                                <option value="" selected>Select Category</option>
                                 <option value="Networking">Networking</option>
                                 <option value="Hardware">Hardware</option>
                                 <option value="Software">Software</option>
@@ -152,10 +153,17 @@
                                 <option value="Backup">Backup</option>
                             </select>
                         </div>
+                        <div class="mb-3">
+                            <label for="inputAssignee" class="form-label">Assigned To</label>
+                            <select autocomplete="off" class="form-select" id="inputAssignee">
+                                <option value=0 selected>Any</option>
+                                <!-- options added dynamically in script.js -->
+                            </select>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" id="submitTicket" class="btn btn-primary" data-bs-dismiss="modal">Submit</button>
+                        <button type="submit" id="submitTicket" class="btn btn-primary">Submit</button>
                     </div>
                 </div>
             </div>
