@@ -170,8 +170,7 @@ $(function() {
 
         let ticketId = curr.find(".field-id").text();
 
-        $.get(`ticket/${ticketId}`, (tickets) => {
-            const ticket = tickets[0];
+        $.get(`ticket/${ticketId}`, (res) => {
             $(".modal-title").text(curr.find(".field-title").text());
             $("#modalDate").text(curr.find(".field-date").text());
             $("#modalAuthor").text(curr.find(".field-author").text());
@@ -179,8 +178,17 @@ $(function() {
             $("#modalPriority").text(curr.find(".field-priority").text());
             $("#modalCategory").text(curr.find(".field-category").text());
             $("#modalAssignee").text(curr.find(".field-assignee").text());
-            $("#modalDescription").val(ticket.description);
-            $("#modalPicture").attr("src", ticket.image);
+            $("#modalDescription").val(res.ticket.description);
+            $("#modalPicture").attr("src", res.ticket.image);
+
+            if (res.allowDelete) {
+                //$("#deleteTicket").prop("disabled", false);
+                $("#deleteTicket").show()
+            }
+            else {
+                //$("#deleteTicket").prop("disabled", true);
+                $("#deleteTicket").hide()
+            }
         });
     }); 
 
@@ -224,6 +232,24 @@ $(function() {
             location.reload();
         }
 
+    });
+
+    $("#deleteTicket").on("click", function() {
+        let data = {
+            id: $("#deleteTicket").attr("ticketVal")
+        }
+
+        $.post(`deleteTicket`, data, (res) => {
+            if (res.success) {
+                alert(`Successfully deleted ticket ${data.id}`);
+                $("#ticketModal").modal("hide");
+                location.reload();
+            }
+            else {
+                alert("Error: " + res.message);
+                return;
+            }
+        });
     });
 
     // populates "assigned to" dropdown with all user names

@@ -113,7 +113,6 @@ app.get('/', authLogin, (req, res) => {
 });
 
 app.get('/tickets', authLogin, (req, res) => {
-    console.log("here");
     res.sendFile(path.join(__dirname, '/public/tickets.html'));
 });
 
@@ -141,7 +140,12 @@ app.post('/api/login', (req, res) => {
         }
         if (results.rowCount > 0) {
             let result = results.rows[0];
-            req.session.profile = { id: result.id, name: result.name, site: result.site};
+            req.session.profile = { 
+                id: result.id,
+                name: result.name,
+                site: result.site,
+                role: result.role
+            };
             res.json({ success: true, url: "/tickets"});
         }
         else {
@@ -177,6 +181,10 @@ app.get('/ticket/:ticketId', authLogin, (req, res) => {
     const query = 'SELECT * FROM tickets WHERE ID = $1'; 
     const ticketId = parseInt(req.params.ticketId);
     const values = [ticketId];
+    
+    // allowDelete is sent to the client and is used for hiding the button
+    let allowDelete = true;
+    if (req.session.profile.role != "tech") allowDelete = false;
 
     pool.query(query, values, (error, results) => { 
         if (error) throw error
@@ -185,10 +193,44 @@ app.get('/ticket/:ticketId', authLogin, (req, res) => {
             return;
         };
 
-        res.status(200).json(results.rows); 
+        res.status(200).json({ticket: results.rows[0], allowDelete: allowDelete}); 
     });
 });
 
+app.post('/deleteTicket', authLogin, (req, res) => {
+    if (req.session.profile.role != "tech") {
+        res.json({success: false, message: "role not authorized"});
+        return;
+    }
+
+    const query = "SELECT * FROM tickets WHERE id = $1"
+    const values = [req.body.id];
+    pool.query(query, values, (error, results) => {
+        if (error) throw error;
+
+        let result = results.rows[0];
+        if (!result) {
+            console.log("here2");
+            res.json({success: false, message: "ticket not found"});
+            return;
+        }
+        else if (result.site != req.session.profile.site) {
+            console.log("here3");
+            res.json({success: false, message: "site not authorized"});
+            return;
+        }
+        else {
+            const subquery = "DELETE FROM tickets WHERE id = $1"
+            pool.query(subquery, values, (sub_error, sub_results) => {
+                if (sub_error) throw sub_error;
+
+                res.json({success: true});
+                return;
+            });
+        }
+    });
+
+});
 
 app.post('/newTicket', authLogin, (req, res) => {
     let data = req.body;
