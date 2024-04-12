@@ -181,13 +181,22 @@ $(function() {
             $("#modalDescription").val(res.ticket.description);
             $("#modalPicture").attr("src", res.ticket.image);
 
-            if (res.allowDelete) {
-                //$("#deleteTicket").prop("disabled", false);
-                $("#deleteTicket").show()
+            if (res.canModify) {
+                $("#deleteTicket").show();
+                $("#deleteTicket").attr("ticketVal", res.ticket.id);
+
+                $("#updateStatus").show();
+                $("#updateStatus").attr("ticketVal", res.ticket.id);
+
+                let newStatus = "";
+                if (res.ticket.status === "New") newStatus = "In Progress";
+                else newStatus = "Closed";
+
+                $("#updateStatus").text(`Change status to '${newStatus}'`);
             }
             else {
-                //$("#deleteTicket").prop("disabled", true);
                 $("#deleteTicket").hide()
+                $("#updateStatus").hide();
             }
         });
     }); 
@@ -242,6 +251,24 @@ $(function() {
         $.post(`deleteTicket`, data, (res) => {
             if (res.success) {
                 alert(`Successfully deleted ticket ${data.id}`);
+                $("#ticketModal").modal("hide");
+                location.reload();
+            }
+            else {
+                alert("Error: " + res.message);
+                return;
+            }
+        });
+    });
+
+    $("#updateStatus").on("click", function() {
+        let data = {
+            id: $("#updateStatus").attr("ticketVal")
+        }
+
+        $.post(`updateTicket`, data, (res) => {
+            if (res.success) {
+                alert(`Successfully updated ticket status.`);
                 $("#ticketModal").modal("hide");
                 location.reload();
             }

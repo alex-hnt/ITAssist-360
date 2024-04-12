@@ -98,7 +98,6 @@ function authLogin (req, res, next) {
     }
     else {
         console.log("No session found");
-        // doesn't work
         res.redirect("/login");
     }
 }
@@ -134,7 +133,6 @@ app.post('/api/login', (req, res) => {
 
     pool.query(sql, values, (error, results) => {
         if (error) {
-            console.log("MAJOR SERVER ERROR");
             res.json({success: false});
             throw error;
         }
@@ -182,9 +180,12 @@ app.get('/ticket/:ticketId', authLogin, (req, res) => {
     const ticketId = parseInt(req.params.ticketId);
     const values = [ticketId];
     
-    // allowDelete is sent to the client and is used for hiding the button
-    let allowDelete = true;
-    if (req.session.profile.role != "tech") allowDelete = false;
+    /*
+        * canModify is sent to the client and is used for hiding the
+        * delete and change priority buttons
+    */
+    let canModify = true;
+    if (req.session.profile.role != "tech") canModify = false;
 
     pool.query(query, values, (error, results) => { 
         if (error) throw error
@@ -193,12 +194,13 @@ app.get('/ticket/:ticketId', authLogin, (req, res) => {
             return;
         };
 
-        res.status(200).json({ticket: results.rows[0], allowDelete: allowDelete}); 
+        res.status(200).json({ticket: results.rows[0], canModify: canModify}); 
     });
 });
 
 app.post('/deleteTicket', authLogin, (req, res) => {
-    if (req.session.profile.role != "tech") {
+    if (req.session.profile.role != "tech" &&
+        req.session.profile.role != "admin") {
         res.json({success: false, message: "role not authorized"});
         return;
     }
@@ -210,12 +212,10 @@ app.post('/deleteTicket', authLogin, (req, res) => {
 
         let result = results.rows[0];
         if (!result) {
-            console.log("here2");
             res.json({success: false, message: "ticket not found"});
             return;
         }
         else if (result.site != req.session.profile.site) {
-            console.log("here3");
             res.json({success: false, message: "site not authorized"});
             return;
         }
@@ -230,6 +230,44 @@ app.post('/deleteTicket', authLogin, (req, res) => {
         }
     });
 
+});
+
+app.post('/updateTicket', authLogin, (req, res) => {
+    if (req.session.profile.role != "tech" &&
+        req.session.profile.role != "admin") {
+        res.json({success: false, message: "role not authorized"});
+        return;
+    }
+
+    const query = "SELECT * FROM tickets WHERE id = $1"
+    let values = [req.body.id]; 
+    pool.query(query, values, (error, results) => {
+        if (error) throw error;
+
+        let result = results.rows[0];
+        if (!result) {
+            res.json({success: false, message: "ticket not found"});
+            return;
+        }
+        else if (result.site != req.session.profile.site) {
+            res.json({success: false, message: "site not authorized"});
+            return;
+        }
+        else {
+            let newStatus = "";
+            if (result.status === "New") newStatus = "In Progress";
+            else newStatus = "Closed";
+
+            values = [newStatus, req.body.id];
+            const subquery = "UPDATE tickets SET status = $1 WHERE id = $2"
+            pool.query(subquery, values, (sub_error, sub_results) => {
+                if (sub_error) throw sub_error;
+
+                res.json({success: true});
+                return;
+            });
+        }
+    });
 });
 
 app.post('/newTicket', authLogin, (req, res) => {
@@ -269,4 +307,3 @@ app.get('/allUsers', authLogin, (req, res) => {
         res.json(results.rows);
     });
 });
-
