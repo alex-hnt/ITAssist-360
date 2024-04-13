@@ -68,8 +68,8 @@ $(function() {
         $.get('allTickets', (data) => {
             let arr=data;
             arr.sort((a, b) => {
-                if (ascending) return new Date(a.openDate) - new Date(b.openDate);
-                else return new Date(b.openDate) - new Date(a.openDate);
+                if (ascending) return new Date(a.opendate) - new Date(b.opendate);
+                else return new Date(b.opendate) - new Date(a.opendate);
             });
 
             populateTable(arr);    

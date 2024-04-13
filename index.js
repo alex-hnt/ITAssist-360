@@ -163,7 +163,7 @@ app.get('/allTickets', authLogin, (req, res) => {
     const sql = `
     SELECT tickets.id, status, opendate, priority, title, 
         u1.name AS author, category, u2.name AS assignee, 
-        description, image
+        description
     FROM tickets
         JOIN users u1 ON tickets.author = u1.id
         JOIN users u2 ON tickets.assignee = u2.id
