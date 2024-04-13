@@ -213,34 +213,8 @@ $(function() {
         });
     });
     
-    $("#submitTicket").on("click", function() {
-
-        let data = {
-            status: "New",
-            openDate: new Date().toLocaleDateString(),
-            priority: $("#inputPriority").val(),
-            title: $("#inputTitle").val(),
-            category: $("#inputCategory").val(),
-            assignee: $("#inputAssignee").val(),
-            description: $("#inputDescription").val(),
-            image: $("#inputPicture").val()
-        }
-
-        if (!data.priority) {
-            alert("Form not valid! You must select a priority.");
-            return;
-        }
-        else if (!data.category) {
-            alert("Form not valid! You must select a category.");
-            return;
-        }
-        else {
-            $.post("newTicket", data);
-            alert("Ticket submitted!");
-            $("#createTicketModal").modal("hide");
-            location.reload();
-        }
-
+    $("#newTicketForm").on("submit", function(e) {
+        alert("Ticket submitted!");
     });
 
     $("#deleteTicket").on("click", function() {

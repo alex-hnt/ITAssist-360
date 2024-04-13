@@ -2,6 +2,7 @@ const express = require("express");
 const session = require("express-session");
 const Pool = require("pg").Pool;
 const path = require("path");
+const fileUpload = require("express-fileupload");
 
 const app = express();
 
@@ -16,7 +17,6 @@ const pool = new Pool({
 // Creates all necessary tables
 function initDB()
 {
-
     let sql = `
     CREATE TABLE IF NOT EXISTS tickets (
         id SERIAL PRIMARY KEY,
@@ -74,6 +74,7 @@ function initDB()
 }
 
 app.use(express.static('public'));
+app.use(fileUpload());
 
 app.use(express.urlencoded({extended: true}));
 
@@ -89,6 +90,7 @@ app.use(session({
         maxAge: 300000 // 5 minutes
     }
 }));
+
 
 // middleware for checking if the user is logged in
 function authLogin (req, res, next) {
@@ -190,11 +192,23 @@ app.get('/ticket/:ticketId', authLogin, (req, res) => {
     pool.query(query, values, (error, results) => { 
         if (error) throw error
 
-        if (results.rows[0].site != req.session.profile.site) {
+        let result = results.rows[0];
+
+        if (result.site != req.session.profile.site) {
             return;
         };
 
-        res.status(200).json({ticket: results.rows[0], canModify: canModify}); 
+        if (result.image) {
+            const b64 = Buffer.from(result.image).toString('base64');
+            const mimeType = 'image/png';
+            result.image = `data:${mimeType};base64,${b64}`;
+        }
+        else {
+            result.image = "";
+        }
+
+
+        res.status(200).json({ticket: result, canModify: canModify}); 
     });
 });
 
@@ -278,12 +292,23 @@ app.post('/newTicket', authLogin, (req, res) => {
         author, category, assignee, description, image, site)
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`;
 
+    let imagedata = null;
+    if (req.files) {
+        imagedata = req.files.image.data;
+    }
+
+    // this could (and should) be done using hidden fields but I am lazy
+    data.status = "New";
+    data.openDate = new Date().toLocaleDateString();
+
     const values = [data.status, data.openDate, data.priority,
         data.title, req.session.profile.id, data.category, data.assignee,
-        data.description, data.image, req.session.profile.site];
+        data.description, imagedata, req.session.profile.site];
 
     pool.query(query, values, (err, result) => {
         if (err) throw err;
+        // this causes the page to refresh. otherwise it is stuck loading
+        res.status(200).redirect('back');
     });
 });
 

@@ -119,21 +119,22 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <form action="/newTicket" method="post" enctype="multipart/form-data" id="newTicketForm">
                         <div class="mb-3">
                             <label for="inputTitle" class="form-label">Title</label>
-                            <input autocomplete="off" type="text" class="form-control" id="inputTitle" placeholder="" required>
+                            <input autocomplete="off" type="text" class="form-control" name="title" id="inputTitle" placeholder="" required>
                         </div>
                         <div class="mb-3">
                             <label for="inputDescription" class="form-label">Description</label>
-                            <textarea autocomplete="off" class="form-control" id="inputDescription" rows="3"></textarea>
+                            <textarea autocomplete="off" name="description" class="form-control" id="inputDescription" rows="3"></textarea>
                         </div>
                         <div class="mb-3">
                             <label for="inputPicture" class="form-label">Upload Image</label>
-                            <input autocomplete="off" class="form-control" type="file" id="inputPicture">
+                            <input autocomplete="off" class="form-control" type="file" id="inputPicture" name="image">
                         </div>
                         <div class="mb-3">
                             <label for="inputPriority" class="form-label">Priority</label>
-                            <select autocomplete="off" class="form-select" id="inputPriority" required>
+                            <select autocomplete="off" class="form-select" name="priority" id="inputPriority" required>
                                 <option value="" selected>Select Priority</option>
                                 <option value="Low">Low</option>
                                 <option value="Medium">Medium</option>
@@ -142,7 +143,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="inputCategory" class="form-label">Category</label>
-                            <select autocomplete="off" class="form-select" id="inputCategory" required>
+                            <select autocomplete="off" class="form-select" id="inputCategory" name="category" required>
                                 <option value="" selected>Select Category</option>
                                 <option value="Networking">Networking</option>
                                 <option value="Hardware">Hardware</option>
@@ -157,15 +158,16 @@
                         </div>
                         <div class="mb-3">
                             <label for="inputAssignee" class="form-label">Assigned To</label>
-                            <select autocomplete="off" class="form-select" id="inputAssignee">
+                            <select autocomplete="off" class="form-select" name="assignee" id="inputAssignee">
                                 <option value=0 selected>Any</option>
                                 <!-- options added dynamically in script.js -->
                             </select>
                         </div>
+                        </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" id="submitTicket" class="btn btn-primary">Submit</button>
+                        <button type="submit" form="newTicketForm" id="submitTicket" class="btn btn-primary">Submit</button>
                     </div>
                 </div>
             </div>
