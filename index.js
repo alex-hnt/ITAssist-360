@@ -28,7 +28,7 @@ function initDB()
         category TEXT,
         assignee INT,
         description TEXT,
-        image TEXT,
+        image BYTEA,
         site INTEGER
     )`;
     pool.query(sql, (err, result) => {
