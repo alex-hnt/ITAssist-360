@@ -8,27 +8,28 @@
 </head>
 <body data-bs-theme="dark">
 
-    <!-- navbar -->
-    <ul class="nav nav-tabs bg-body-tertiary pt-1 justify-content-between" data-bs-theme="dark">
-        <div class="container d-flex">
+        <!-- navbar -->
+        <ul class="nav nav-tabs bg-body-tertiary pt-1" data-bs-theme="dark">
             <div class="container d-flex">
-                <span class="navbar-brand fs-4 me-2">ITAssist 360</span>
-                <li class="nav-item">
-                    <a class="nav-link" href="tickets.html" aria-current="page">Tickets</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="monitor.html">Monitor</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" id="adminLink" href="admin.html">Manage Users</a>
-                </li>
+                <div class="container d-md-flex">
+                    <span class="navbar-brand fs-4 me-2">ITAssist 360</span>
+                    <li class="nav-item">
+                        <a class="nav-link" href="tickets.html" aria-current="page">Tickets</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="monitor.html">Monitor</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" id="adminLink" href="admin.html">Manage Users</a>
+                    </li>
+                </div>
+                <div class="container nav-settings justify-content-end d-flex">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/settings"><i class="bi bi-gear"></i></a>
+                    </li>
+                </div>
             </div>
-            <div class="nav-settings">
-                <a class="nav-link" href="/settings"><i class="bi bi-gear-fill"></i>
-                </a>
-            </div>
-        </div>
-    </ul>
+        </ul>
 
     <div class="container mt-5">
         <h1>Admin Panel</h1>

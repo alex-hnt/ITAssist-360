@@ -96,11 +96,9 @@ app.use(session({
 // middleware for checking if the user is logged in
 function authLogin (req, res, next) {
     if (req.session.profile) {
-        console.log("Found session");
         next();
     }
     else {
-        console.log("No session found");
         res.redirect("/login");
     }
 }

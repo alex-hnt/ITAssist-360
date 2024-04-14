@@ -34,14 +34,14 @@ $(function() {
 
                 $("tbody").append(`
                     <tr class="${ticketClass}">
-                    <td class="field-id">${ticket.id}</td>
-                    <td class="field-status">${ticket.status}</td>
-                    <td class="field-date">${ticket.opendate}</td>
-                    <td class="field-priority ${priorityClass}">${ticket.priority}</td>
+                    <td class="field-id d-none d-lg-table-cell">${ticket.id}</td>
+                    <td class="field-status d-none d-lg-table-cell">${ticket.status}</td>
+                    <td class="field-date d-none d-lg-table-cell">${ticket.opendate}</td>
+                    <td class="field-priority ${priorityClass} d-none d-lg-table-cell">${ticket.priority}</td>
                     <td class="field-title">${ticket.title}</td>
-                    <td class="field-author">${ticket.author}</td>
-                    <td class="field-category">${ticket.category}</td>
-                    <td class="field-assignee">${ticket.assignee}</td>
+                    <td class="field-author d-none d-lg-table-cell">${ticket.author}</td>
+                    <td class="field-category d-none d-lg-table-cell">${ticket.category}</td>
+                    <td class="field-assignee d-none d-lg-table-cell">${ticket.assignee}</td>
                     <td>
                     <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#ticketModal">View Ticket</button>
                     </td>

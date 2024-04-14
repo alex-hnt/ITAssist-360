@@ -13,9 +13,9 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
         <!-- navbar -->
-        <ul class="nav nav-tabs bg-body-tertiary pt-1 justify-content-between" data-bs-theme="dark">
+        <ul class="nav nav-tabs bg-body-tertiary pt-1" data-bs-theme="dark">
             <div class="container d-flex">
-                <div class="container d-flex">
+                <div class="container d-md-flex">
                     <span class="navbar-brand fs-4 me-2">ITAssist 360</span>
                     <li class="nav-item">
                         <a class="nav-link active" href="tickets.html" aria-current="page">Tickets</a>
@@ -27,9 +27,10 @@
                         <a class="nav-link" id="adminLink" href="admin.html">Manage Users</a>
                     </li>
                 </div>
-                <div class="nav-settings">
-                    <a class="nav-link" href="/settings"><i class="bi bi-gear-fill"></i>
-</a>
+                <div class="container nav-settings justify-content-end d-flex">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/settings"><i class="bi bi-gear"></i></a>
+                    </li>
                 </div>
             </div>
         </ul>
@@ -53,14 +54,14 @@
             <table class="table table-dark table-hover" id="ticketTable">
                 <thead class="sticky-top">
                     <tr>
-                        <th><a href="#" id="sortID">#</th>
-                        <th><a href="#" id="sortStatus">Status</th>
-                        <th><a href="#" id="sortDate">Date Opened</th>
-                        <th><a href="#" id="sortPriority">Priority</th>
+                        <th class="d-none d-lg-table-cell"><a href="#" id="sortID">#</th>
+                        <th class="d-none d-lg-table-cell"><a href="#" id="sortStatus">Status</th>
+                        <th class="d-none d-lg-table-cell"><a href="#" id="sortDate">Date Opened</th>
+                        <th class="d-none d-lg-table-cell"><a href="#" id="sortPriority">Priority</th>
                         <th>Title</th>
-                        <th>Author</th>
-                        <th>Category</th>
-                        <th>Assigned To</th>
+                        <th class="d-none d-lg-table-cell">Author</th>
+                        <th class="d-none d-lg-table-cell">Category</th>
+                        <th class="d-none d-lg-table-cell">Assigned To</th>
                         <th></th>
                     </tr>
                 </thead>
