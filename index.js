@@ -66,7 +66,8 @@ function initDB()
     sql = `
     CREATE TABLE IF NOT EXISTS sites (
         id SERIAL PRIMARY KEY,
-        name TEXT
+        name TEXT,
+        UNIQUE(name)
     )`;
     pool.query(sql, (err, result) => {
         if (err) throw err;
@@ -129,6 +130,10 @@ app.get('/admin', authLogin, (req, res) => {
     if (req.session.profile.role === 'admin') {
         res.sendFile(path.join(__dirname, '/public/admin.html'));
     }
+});
+
+app.get('/signup', (req, res) => {
+    res.sendFile(path.join(__dirname, '/public/signup.html'));
 });
 
 app.post('/api/login', (req, res) => {
