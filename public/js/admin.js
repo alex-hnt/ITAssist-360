@@ -19,4 +19,19 @@ $(document).ready(function(){
             populateUserList();
         });
     });
+
+    $('#deleteUserBtn').on("click", function(){
+        const userId = $('#userList').val();
+
+        $.post('/deleteUser', { id: userId }, (res) => {
+            if (res.success) {
+                alert("Successfully deleted user.");
+            }
+            else {
+                alert(res.message);
+            }
+
+            populateUserList();
+        });
+    });
 });

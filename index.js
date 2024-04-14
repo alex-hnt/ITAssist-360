@@ -353,13 +353,18 @@ app.post('/updateTicket', authLogin, (req, res) => {
     });
 });
 
+/*
+    * This does not actually delete the user, as it would cause problems
+    * with tickets. Instead, it changes their name to "deleted user" and
+    * removes the ability to login.
+*/
 app.post('/deleteUser', authLogin, (req, res) => {
     if (req.session.profile.role != 'admin') {
         res.json({success: false, message: "role not authorized"});
         return;
     }
 
-    const query = "DELETE FROM users WHERE id = $1 AND site = $2";
+    const query = "UPDATE users SET name = 'deleted user', email = null, password = null WHERE id = $1 AND site = $2";
     const values = [req.body.id, req.session.profile.site];
     pool.query(query, values, (error) => {
         if (error) {
@@ -410,8 +415,9 @@ app.get('/getnames', (req, res) => {
     });
 });
 
+// Returns all users (except for 'deleted' ones)
 app.get('/allUsers', authLogin, (req, res) => {
-    const query = 'SELECT id, name FROM users WHERE site = $1';
+    const query = "SELECT id, name FROM users WHERE site = $1 AND name != 'deleted user'";
     const values = [req.session.profile.site];
 
     pool.query(query, values, (err, results) => {
