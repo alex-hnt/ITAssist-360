@@ -46,3 +46,7 @@ table a {
 .ticket-red {
     color: red !important;
 }
+
+.nav-settings a {
+    color: white !important;
+}

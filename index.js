@@ -118,7 +118,17 @@ app.get('/tickets', authLogin, (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public/company_selection.html'));
+    res.sendFile(path.join(__dirname, '/public/login.html'));
+});
+
+app.get('/settings', authLogin, (req, res) => {
+    res.sendFile(path.join(__dirname, '/public/settings.html'));
+});
+
+app.get('/admin', authLogin, (req, res) => {
+    if (req.session.profile.role === 'admin') {
+        res.sendFile(path.join(__dirname, '/public/admin.html'));
+    }
 });
 
 app.post('/api/login', (req, res) => {
@@ -150,6 +160,60 @@ app.post('/api/login', (req, res) => {
         }
         else {
             res.json({success: false});
+        }
+    })
+});
+
+app.post('/api/signup', (req, res) => {
+    let query = `INSERT INTO users (name, email, password, site, role)
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING id, name, site, role`;
+    let values = [req.body.name, req.body.email, req.body.password, req.body.site, 'user'];
+    pool.query(query, values, (error, results) => {
+        if (error || results.rowCount < 1) {
+            res.json({success: false, message: "error signing up"});
+        }
+        else {
+            let result = results.rows[0];
+            req.session.profile = { 
+                id: result.id,
+                name: result.name,
+                site: result.site,
+                role: result.role
+            };
+            res.json({success: true, url: "/tickets"});
+        }
+    });
+});
+
+// This route handles an "admin" signup. It creates the new site as well.
+app.post('/api/signup-admin', (req, res) => {
+    let query = "INSERT INTO sites (name) VALUES ($1) RETURNING id";
+    let values = [req.body.siteName];
+    pool.query(query, values, (error, results) => {
+        if (error) {
+            res.json({success: false, message: "error creating site"});
+        }
+        else {
+            let subquery = `INSERT INTO users (name, email, password, site, role)
+            VALUES ($1, $2, $3, $4, $5)
+            RETURNING id, name, site, role`;
+            values = [req.body.name, req.body.email, req.body.password, results.rows[0].id, 'admin'];
+            pool.query(subquery, values, (sub_error, sub_results) => {
+                if (sub_error || sub_results.rowCount < 1) {
+                    res.json({success: false, message: "error creating account"});
+                }
+                else {
+                    let result = sub_results.rows[0];
+                    req.session.profile = { 
+                        id: result.id,
+                        name: result.name,
+                        site: result.site,
+                        role: result.role
+                    };
+                    res.json({success: true, url: "/tickets"});
+                }
+            });
         }
     })
 });
@@ -284,6 +348,24 @@ app.post('/updateTicket', authLogin, (req, res) => {
     });
 });
 
+app.post('/deleteUser', authLogin, (req, res) => {
+    if (req.session.profile.role != 'admin') {
+        res.json({success: false, message: "role not authorized"});
+        return;
+    }
+
+    const query = "DELETE FROM users WHERE id = $1 AND site = $2";
+    const values = [req.body.id, req.session.profile.site];
+    pool.query(query, values, (error) => {
+        if (error) {
+            res.json({success: false, message: "error deleting user"});
+        }
+        else {
+            res.json({success: true});
+        }
+    });
+});
+
 app.post('/newTicket', authLogin, (req, res) => {
     let data = req.body;
     
@@ -331,4 +413,43 @@ app.get('/allUsers', authLogin, (req, res) => {
         if (err) throw err;
         res.json(results.rows);
     });
+});
+
+
+app.post('/updateUserRole', authLogin, (req, res) => {
+    if (req.session.profile.role !== 'admin') {
+        res.json({ success: false, message: 'Only admin users can update roles' });
+        return;
+    }
+
+    const { userId, newRole } = req.body;
+    const query = 'UPDATE users SET role = $1 WHERE id = $2';
+    const values = [newRole, userId];
+
+    pool.query(query, values, (error, results) => {
+        if (error) {
+            res.json({ success: false, message: 'Failed to update user role' });
+        } else {
+            res.json({ success: true, message: 'User role updated successfully' });
+        }
+    });
+});
+
+app.post('/changePassword', authLogin, (req, res) => {
+    if (!req.body.password || req.body.password == " ") {
+        res.json({success: false, message: "Invalid password."});
+        return;
+    }
+    const query = "UPDATE users SET password = $1 WHERE id = $2";
+    const values = [req.body.password, req.session.profile.id];
+
+    pool.query(query, values, (error, results) => {
+        if (error) throw error;
+
+        res.json({success: true});
+    });
+});
+
+app.get('/currentUser', authLogin, (req, res) => {
+    res.json(req.session.profile);
 });

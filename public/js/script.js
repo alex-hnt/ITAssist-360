@@ -253,6 +253,12 @@ $(function() {
         });
     });
 
+    $.get('currentUser', (user) => {
+        if (user.role != "admin") {
+            $("#adminLink").hide();
+        }
+    });
+
     // populates "assigned to" dropdown with all user names
     $.get('allUsers', (users) => {
         for (const user of users) {
