@@ -34,4 +34,26 @@ $(document).ready(function(){
             populateUserList();
         });
     });
+
+    $("#signupButton").on("click", function() {
+        let name = $("#nameInput").val();
+        let email = $("#emailInput").val();
+        let password = $("#passwordInput").val();
+
+        let data = {
+            name: name,
+            email: email,
+            password: password 
+        };
+
+        $.post("/api/signup", data, (res) => {
+            if (res.success) {
+                alert("Successfully added the user.");
+                populateUserList();
+            }
+            else {
+                alert(res.message);
+            }
+        });
+    });
 });

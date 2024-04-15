@@ -171,7 +171,7 @@ app.post('/api/signup', (req, res) => {
     let query = `INSERT INTO users (name, email, password, site, role)
     VALUES ($1, $2, $3, $4, $5)
     RETURNING id, name, site, role`;
-    let values = [req.body.name, req.body.email, req.body.password, req.body.site, 'user'];
+    let values = [req.body.name, req.body.email, req.body.password, req.session.profile.site, 'user'];
     pool.query(query, values, (error, results) => {
         if (error || results.rowCount < 1) {
             res.json({success: false, message: "error signing up"});
@@ -184,7 +184,7 @@ app.post('/api/signup', (req, res) => {
                 site: result.site,
                 role: result.role
             };
-            res.json({success: true, url: "/tickets"});
+            res.json({success: true});
         }
     });
 });
