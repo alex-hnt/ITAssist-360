@@ -7,32 +7,37 @@
     <title>Admin Panel</title>
 </head>
 <body data-bs-theme="dark">
+</head>
+<body data-bs-theme="dark">
 
-        <!-- navbar -->
-        <ul class="nav nav-tabs bg-body-tertiary pt-1" data-bs-theme="dark">
-            <div class="container d-flex">
-                <div class="container d-md-flex">
-                    <span class="navbar-brand fs-4 me-2">ITAssist 360</span>
+    <!-- Navbar -->
+    <nav class="nav nav-tabs bg-body-tertiary pt-1" data-bs-theme="dark">
+        <div class="container d-flex">
+            <div class="container d-md-flex">
+                <span class="navbar-brand fs-4 me-2">ITAssist 360</span>
+                <ul class="nav">
                     <li class="nav-item">
                         <a class="nav-link" href="tickets.html" aria-current="page">Tickets</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" id="adminLink" href="admin.html">Manage Users</a>
                     </li>
-                </div>
-                <div class="container nav-settings justify-content-end d-flex">
+                </ul>
+            </div>
+            <div class="container nav-settings justify-content-end d-flex">
+                <ul class="nav">
                     <li class="nav-item">
                         <a class="nav-link" href="/settings"><i class="bi bi-gear"></i></a>
                     </li>
-                </div>
+                </ul>
             </div>
-        </ul>
+        </div>
+    </nav>
 
     <div class="container mt-5">
         <h1>Admin Panel</h1>
         <h2>Manage User Roles</h2>
-        <select id="userList" class="form-control mb-3">
-        </select>
+        <select id="userList" class="form-control mb-3"></select>
         <div class="form-group">
             <label for="newRole">New Role:</label>
             <select id="newRole" class="form-control">
@@ -41,16 +46,25 @@
                 <option value="admin">Admin</option>
             </select>
         </div>
+        <h1></h1>
         <button id="updateRoleBtn" class="btn btn-primary">Update Role</button>
         <button id="deleteUserBtn" class="btn btn-danger">Delete User</button>
         <div class="form-group">
             <h2>Add New User</h2>
-            <input type="text" id="nameInput" placeholder="Name"></input>
-            <input type="text" id="emailInput" placeholder="Email"></input>
-            <label for="passwordInput">Password:</label>
-            <input type="password" id="passwordInput"></input>
-            * Remember to have the user change their password after logging in!
-            <button id="signupButton">Add User</button>
+            <div class="mb-3">
+                <label for="nameInput" class="form-label">Name:</label>
+                <input type="text" class="form-control" id="nameInput" placeholder="Name">
+            </div>
+            <div class="mb-3">
+                <label for="emailInput" class="form-label">Email:</label>
+                <input type="email" class="form-control" id="emailInput" placeholder="Email">
+            </div>
+            <div class="mb-3">
+                <label for="passwordInput" class="form-label">Password:</label>
+                <input type="password" class="form-control" id="passwordInput">
+            </div>
+            <p>* Remember to have the user change their password after logging in!</p>
+            <button id="signupButton" class="btn btn-primary">Add User</button>
         </div>
     </div>
 

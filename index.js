@@ -177,13 +177,6 @@ app.post('/api/signup', (req, res) => {
             res.json({success: false, message: "error signing up"});
         }
         else {
-            let result = results.rows[0];
-            req.session.profile = { 
-                id: result.id,
-                name: result.name,
-                site: result.site,
-                role: result.role
-            };
             res.json({success: true});
         }
     });
@@ -254,7 +247,7 @@ app.get('/ticket/:ticketId', authLogin, (req, res) => {
         * delete and change priority buttons
     */
     let canModify = true;
-    if (req.session.profile.role != "tech") canModify = false;
+    if (req.session.profile.role != "tech" && req.session.profile.role != "admin") canModify = false;
 
     pool.query(query, values, (error, results) => { 
         if (error) throw error

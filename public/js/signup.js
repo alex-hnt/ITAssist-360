@@ -11,7 +11,7 @@ $(function() {
             email: email,
             password: password 
         };
-
+        console.log("clicked");
         $.post("/api/signup-admin", data, (res) => {
             if (res.success) {
                 alert("Success! Welcome to ITAssist 360!");

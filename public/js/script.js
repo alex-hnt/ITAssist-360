@@ -254,6 +254,7 @@ $(function() {
     });
 
     $.get('currentUser', (user) => {
+        console.log(user);
         if (user.role != "admin") {
             $("#adminLink").hide();
         }
