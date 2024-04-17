@@ -128,3 +128,8 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+.venv/
+client/
+public/js/monitor.js
+public/monitor.html
